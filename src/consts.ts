@@ -15,7 +15,8 @@ export const NAV = [
   { label: 'About', href: '/about' },
 ];
 
+// Rendered in the footer and at the bottom of the About page. Add an entry
+// here to show a new contact link; both places pick it up automatically.
 export const SOCIALS = [
   { label: 'GitHub', href: 'https://github.com/JoseAcevedo-code' },
-  { label: 'Email', href: 'mailto:you@example.com' },
 ];

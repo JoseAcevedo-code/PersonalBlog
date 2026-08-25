@@ -1,0 +1,65 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Page not found" description="That page doesn't exist.">
+  <div class="shell notfound">
+    <p class="code" aria-hidden="true">404</p>
+    <h1>That page isn't here</h1>
+    <p class="lede">
+      The link may be old, or the URL may have a typo in it. Both are fixable.
+    </p>
+    <p class="actions">
+      <a href="/writing">Browse all writing</a>
+      <span aria-hidden="true">·</span>
+      <a href="/">Go home</a>
+    </p>
+  </div>
+</Base>
+
+<style>
+  .notfound {
+    padding-block: clamp(2rem, 8vw, 5rem);
+  }
+
+  .code {
+    font-family: var(--font-display);
+    font-variation-settings: 'SOFT' 40, 'WONK' 0, 'opsz' 120;
+    font-weight: 700;
+    font-size: clamp(4rem, 16vw, 8rem);
+    line-height: 0.9;
+    letter-spacing: -0.05em;
+    color: transparent;
+    -webkit-text-stroke: 1.5px var(--ink-faint);
+  }
+
+  @supports not (-webkit-text-stroke: 1px black) {
+    .code {
+      color: var(--ink-faint);
+    }
+  }
+
+  .notfound h1 {
+    margin-block-start: 1.5rem;
+    font-size: var(--step-3);
+  }
+
+  .lede {
+    max-width: var(--measure);
+    margin-block-start: 1rem;
+    font-size: var(--step-1);
+    color: var(--ink-soft);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-block-start: 2rem;
+    font-size: var(--step-0);
+  }
+
+  .actions span {
+    color: var(--ink-faint);
+  }
+</style>

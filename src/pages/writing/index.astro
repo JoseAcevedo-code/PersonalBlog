@@ -1,0 +1,175 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import PostRow from '../../components/PostRow.astro';
+import { sortPosts, groupByYear, collectTags, slugifyTag } from '../../utils';
+
+const posts = sortPosts(await getCollection('blog'));
+const years = groupByYear(posts);
+const tags = collectTags(posts);
+---
+
+<Base
+  title="Writing"
+  description="Everything I've written, newest first."
+>
+  <div class="wide">
+    <header class="page-head">
+      <h1>Writing</h1>
+      <p class="count">
+        {posts.length}
+        {posts.length === 1 ? 'post' : 'posts'}, newest first
+      </p>
+    </header>
+
+    {
+      tags.length > 0 && (
+        <nav class="tag-bar" aria-label="Filter by tag">
+          {tags.map(({ tag, count }) => (
+            <a href={`/tags/${slugifyTag(tag)}/`}>
+              {tag} <span class="count-badge">{count}</span>
+            </a>
+          ))}
+        </nav>
+      )
+    }
+
+    {
+      years.length === 0 && (
+        <p class="empty">
+          Nothing published yet. Drop a <code>.md</code> file into{' '}
+          <code>src/content/blog/</code> to get started.
+        </p>
+      )
+    }
+
+    {
+      years.map(([year, yearPosts]) => (
+        <section class="year-group">
+          {/* The signature: chronology set as structure, not decoration. */}
+          <div class="year-rail">
+            <span class="year" aria-hidden="true">
+              {year}
+            </span>
+            <h2 class="visually-hidden">Posts from {year}</h2>
+          </div>
+          <div class="year-posts">
+            {yearPosts.map((post) => (
+              <PostRow post={post} />
+            ))}
+          </div>
+        </section>
+      ))
+    }
+  </div>
+</Base>
+
+<style>
+  /* This page runs wider than the rest of the site to make room for the
+     year rail without squeezing the reading column. */
+  .wide {
+    width: 100%;
+    max-width: 54rem;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  .page-head h1 {
+    font-size: var(--step-3);
+  }
+
+  .count {
+    margin-block-start: 0.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+  }
+
+  .tag-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-block-start: 1.75rem;
+    padding-block-end: 2rem;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .tag-bar a {
+    padding: 0.22em 0.7em;
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    font-size: var(--step--1);
+    text-decoration: none;
+    color: var(--ink-soft);
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+
+  .tag-bar a:hover {
+    background: var(--moss-wash);
+    border-color: var(--moss);
+    color: var(--moss-deep);
+  }
+
+  .count-badge {
+    font-family: var(--font-mono);
+    font-size: 0.75em;
+    color: var(--ink-faint);
+  }
+
+  .year-group {
+    display: grid;
+    grid-template-columns: 7.5rem minmax(0, 1fr);
+    gap: 0 2rem;
+    margin-block-start: 3rem;
+  }
+
+  .year-rail {
+    position: relative;
+  }
+
+  .year {
+    position: sticky;
+    top: 5.5rem;
+    display: block;
+    font-family: var(--font-display);
+    font-variation-settings: 'SOFT' 40, 'WONK' 0, 'opsz' 100;
+    font-weight: 700;
+    font-size: 2.9rem;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+    /* Outlined rather than filled — present but never competing with titles. */
+    color: transparent;
+    -webkit-text-stroke: 1px var(--ink-faint);
+    padding-block-start: 0.6rem;
+  }
+
+  /* Fallback for engines without text-stroke */
+  @supports not (-webkit-text-stroke: 1px black) {
+    .year {
+      color: var(--ink-faint);
+    }
+  }
+
+  .year-posts > :global(.row:first-child) {
+    border-top: 1px solid var(--rule);
+  }
+
+  .empty {
+    margin-block-start: 2.5rem;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 40rem) {
+    .year-group {
+      grid-template-columns: 1fr;
+      gap: 0.5rem;
+    }
+
+    .year {
+      position: static;
+      font-size: 2rem;
+      padding-block-start: 0;
+    }
+  }
+</style>

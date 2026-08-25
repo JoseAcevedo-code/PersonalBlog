@@ -1,0 +1,108 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import PostRow from '../components/PostRow.astro';
+import { SITE } from '../consts';
+import { sortPosts } from '../utils';
+
+const allPosts = sortPosts(await getCollection('blog'));
+const posts = allPosts.slice(0, 5);
+const hasMore = allPosts.length > 5;
+---
+
+<Base title={SITE.title}>
+  <section class="shell hero">
+    <h1>
+      I build things,<br />
+      then write down<br />
+      <em>what broke.</em>
+    </h1>
+    <p class="bio">
+      Software developer in Los Angeles. Mostly web apps and AI tooling. This is
+      where I keep the notes I'd otherwise lose — the debugging dead ends, the
+      decisions I'd make differently, and the occasional thing that worked.
+    </p>
+  </section>
+
+  <section class="shell recent">
+    <div class="section-head">
+      <h2 class="eyebrow">Recent</h2>
+      {hasMore && <a class="all" href="/writing">All writing →</a>}
+    </div>
+
+    {
+      posts.length > 0 ? (
+        <div class="list">
+          {posts.map((post) => (
+            <PostRow post={post} />
+          ))}
+        </div>
+      ) : (
+        <p class="empty">
+          No posts yet. Add a markdown file to <code>src/content/blog/</code> and
+          it'll show up here.
+        </p>
+      )
+    }
+  </section>
+</Base>
+
+<style>
+  .hero h1 {
+    font-size: var(--step-4);
+    font-variation-settings: 'SOFT' 70, 'WONK' 1, 'opsz' 90;
+    font-weight: 600;
+    line-height: 1.05;
+    letter-spacing: -0.028em;
+  }
+
+  /* The one italic in the whole design, on the one word that carries the
+     thesis. Fraunces' WONK axis makes this tilt feel drawn, not slanted. */
+  .hero h1 em {
+    font-style: italic;
+    color: var(--moss);
+  }
+
+  .bio {
+    max-width: 30rem;
+    margin-block-start: 1.75rem;
+    font-size: var(--step-1);
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+
+  .recent {
+    margin-block-start: clamp(3.5rem, 9vw, 6rem);
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-block-end: 0.65rem;
+    border-bottom: 1px solid var(--rule-strong);
+  }
+
+  .all {
+    font-size: var(--step--1);
+    text-decoration: none;
+    color: var(--ink-soft);
+  }
+
+  .all:hover {
+    color: var(--moss-deep);
+  }
+
+  .empty {
+    padding-block: 2rem;
+    color: var(--ink-soft);
+  }
+
+  .empty code {
+    background: var(--moss-wash);
+    padding: 0.15em 0.38em;
+    border-radius: var(--radius);
+    color: var(--moss-deep);
+  }
+</style>

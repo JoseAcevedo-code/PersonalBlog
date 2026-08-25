@@ -1,0 +1,90 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatDateShort, isoDate, readingTime } from '../utils';
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  /** Hide the date column on the home page, where recency is implied. */
+  showMeta?: boolean;
+}
+
+const { post, showMeta = true } = Astro.props;
+const minutes = readingTime(post.body);
+---
+
+<article class="row">
+  <a class="hit" href={`/writing/${post.id}/`}>
+    <h3 class="title">
+      {post.data.title}
+      {post.data.draft && <span class="draft">Draft</span>}
+    </h3>
+    <p class="dek">{post.data.description}</p>
+    {
+      showMeta && (
+        <p class="meta">
+          <time datetime={isoDate(post.data.pubDate)}>
+            {formatDateShort(post.data.pubDate)}
+          </time>
+          <span aria-hidden="true">·</span>
+          <span>{minutes} min read</span>
+        </p>
+      )
+    }
+  </a>
+</article>
+
+<style>
+  .row {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .hit {
+    display: block;
+    padding-block: 1.35rem;
+    text-decoration: none;
+    /* The whole row is the target, so the link area matches the visual area. */
+  }
+
+  .title {
+    font-size: var(--step-1);
+    font-weight: 600;
+    font-variation-settings: 'SOFT' 55, 'WONK' 1, 'opsz' 24;
+    line-height: 1.25;
+    transition: color 0.15s ease;
+  }
+
+  .hit:hover .title {
+    color: var(--moss-deep);
+  }
+
+  .draft {
+    display: inline-block;
+    margin-inline-start: 0.5rem;
+    padding: 0.1em 0.5em;
+    border: 1px solid var(--rule-strong);
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-size: 0.62em;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    vertical-align: middle;
+  }
+
+  .dek {
+    margin-block-start: 0.35rem;
+    max-width: var(--measure);
+    color: var(--ink-soft);
+    font-size: var(--step-0);
+  }
+
+  .meta {
+    margin-block-start: 0.5rem;
+    display: flex;
+    gap: 0.55rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+  }
+</style>

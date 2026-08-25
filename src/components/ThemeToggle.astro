@@ -1,0 +1,82 @@
+---
+// No client framework needed — one button, one listener.
+---
+
+<button
+  id="theme-toggle"
+  type="button"
+  class="toggle"
+  aria-live="polite"
+  aria-label="Switch to dark theme"
+>
+  <svg class="icon sun" viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="12" cy="12" r="4.2"></circle>
+    <path d="M12 2.6v2.4M12 19v2.4M2.6 12h2.4M19 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M18.7 5.3L17 7M7 17l-1.7 1.7"></path>
+  </svg>
+  <svg class="icon moon" viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M20 14.2A8.4 8.4 0 0 1 9.8 4a8.4 8.4 0 1 0 10.2 10.2z"></path>
+  </svg>
+</button>
+
+<style>
+  .toggle {
+    display: grid;
+    place-items: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    padding: 0;
+    background: transparent;
+    border: 1px solid var(--rule);
+    border-radius: 50%;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .toggle:hover {
+    color: var(--ink);
+    border-color: var(--rule-strong);
+    background: var(--paper-raised);
+  }
+
+  .icon {
+    width: 1rem;
+    height: 1rem;
+    grid-area: 1 / 1;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+  }
+
+  .moon {
+    display: none;
+  }
+
+  :global(:root[data-theme='dark']) .sun {
+    display: none;
+  }
+
+  :global(:root[data-theme='dark']) .moon {
+    display: block;
+  }
+</style>
+
+<script>
+  const root = document.documentElement;
+  const button = document.getElementById('theme-toggle');
+
+  function syncLabel() {
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    button?.setAttribute('aria-label', `Switch to ${next} theme`);
+  }
+
+  button?.addEventListener('click', () => {
+    const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+    root.dataset.theme = next;
+    localStorage.setItem('theme', next);
+    syncLabel();
+  });
+
+  syncLabel();
+</script>

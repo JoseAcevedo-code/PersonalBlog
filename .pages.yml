@@ -1,0 +1,56 @@
+# Pages CMS configuration — https://pagescms.org
+#
+# Connect this repo at https://app.pagescms.org to write posts in a browser
+# instead of editing files by hand. The fields below mirror the content
+# schema in src/content.config.ts; if you change one, change the other or
+# the build will reject the post.
+
+media:
+  input: public
+  output: /
+
+content:
+  - name: posts
+    label: Posts
+    type: collection
+    path: src/content/blog
+    filename: '{fields.title}.md'
+    view:
+      fields: [title, pubDate, draft]
+      primary: title
+      sort: [pubDate, title]
+    fields:
+      - name: title
+        label: Title
+        type: string
+        required: true
+      - name: description
+        label: Description
+        description: One sentence. Shown in the post list and in link previews.
+        type: text
+        required: true
+      - name: pubDate
+        label: Publication date
+        type: date
+        required: true
+        options:
+          format: yyyy-MM-dd
+      - name: updatedDate
+        label: Updated date
+        description: Optional. Only set this if you revise a published post.
+        type: date
+        options:
+          format: yyyy-MM-dd
+      - name: tags
+        label: Tags
+        description: Optional. Tag pages are generated automatically.
+        type: string
+        list: true
+      - name: draft
+        label: Draft
+        description: Keep this post off the live site.
+        type: boolean
+        default: false
+      - name: body
+        label: Body
+        type: rich-text

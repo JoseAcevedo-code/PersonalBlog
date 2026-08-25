@@ -89,6 +89,17 @@ so there's no flash of the wrong theme before paint.
 
 The build output is fully static, so anything that serves files will work.
 
+**Cloudflare Workers** (what this repo currently deploys to) — connect the repo
+under Compute → Workers, and set:
+
+- Build command: `npm run build`
+- Deploy command: `npx wrangler deploy`
+
+The public URL is not enabled automatically. After the first successful build,
+go to Settings → Domains & Routes and enable the `workers.dev` route, then set
+`site` in `astro.config.mjs` and the `Sitemap:` line in `public/robots.txt` to
+that address.
+
 **Cloudflare Pages** — connect the repo and set:
 
 - Build command: `npm run build`

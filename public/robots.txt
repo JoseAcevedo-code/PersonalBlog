@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://personalblog.acevedo-jose20188.workers.dev/sitemap-index.xml
+Sitemap: https://personalblog.josela.workers.dev/sitemap-index.xml

@@ -8,7 +8,7 @@ import sitemap from '@astrojs/sitemap';
 // swap in a custom domain when you add one.
 // Used for canonical URLs, the sitemap, and the RSS feed.
 export default defineConfig({
-  site: 'https://personalblog.acevedo-jose20188.workers.dev',
+  site: 'https://personalblog.josela.workers.dev',
   integrations: [mdx(), sitemap()],
   markdown: {
     shikiConfig: {
